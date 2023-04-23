@@ -1,6 +1,6 @@
-from main import create_app
+from src.server.instance import server
 
-app = create_app()
+from src.api.rotas_urls import *
+from src.api.rotas_requisicoes import *
 
-if __name__ == "__main__":
-    app.run()
+server.run()

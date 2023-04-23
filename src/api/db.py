@@ -20,7 +20,7 @@ Enderecos = [
     {
         "id": 4,
         "nome_do_sistema": "IP 1",
-        "endereco": "000.000.000.000",
+        "endereco": "191.177.176.220",
         "ping": True
     }
 ]
