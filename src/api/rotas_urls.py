@@ -43,6 +43,7 @@ class RotasEnderecos(Resource):
                     return endereco
                 
         # método PUT para editar um endereço específico
+        @api.expect(endereco_post, validate=True)
         @api.marshal_list_with(endereco)
         def put(self, id):
             post = request.get_json()
