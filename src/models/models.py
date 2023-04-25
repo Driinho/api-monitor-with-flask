@@ -13,4 +13,4 @@ class Incidente(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     endereco = db.Column(db.String(120), nullable=False)
     data_hora_queda = db.Column(db.DateTime, nullable=False)
-    data_hora_retorno = db.Column(db.DateTime, nullable=False)
+    data_hora_retorno = db.Column(db.DateTime, nullable=True)

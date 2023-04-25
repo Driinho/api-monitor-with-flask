@@ -3,7 +3,7 @@ from flask_restx import Resource
 from src.models.Respostas import resposta
 from src.server.instance import server
 
-from src.models.models import db, Endereco
+from src.models.models import db, Endereco, Incidente
 
 import requests as http
 import platform, subprocess
@@ -57,6 +57,32 @@ class RotasRequests(Resource):
                         "endereco": endereco.endereco,
                         "status_code": 'ERRO'
                     }
+
+            if dicionario.get('status_code') == 'ERRO':
+                if not db.session.query(Incidente).filter(
+                    Incidente.endereco == dicionario.get('endereco'), 
+                    Incidente.data_hora_retorno.is_(None)
+                    ).all():
+                    incidente = Incidente(
+                        endereco=dicionario.get('endereco'),
+                        data_hora_queda=db.func.now()
+                    )
+
+                    db.session.add(incidente)
+                    db.session.commit()
+            else:
+                print("Aqui")
+                if db.session.query(Incidente).filter(
+                    Incidente.endereco == dicionario.get('endereco'), 
+                    Incidente.data_hora_retorno.is_(None)
+                    ).first():
+                    
+                    print("AQUI TAMBÉM")
+                    db.session.query(Incidente).filter(
+                        Incidente.endereco == dicionario.get('endereco'), 
+                        Incidente.data_hora_retorno.is_(None)).update({"data_hora_retorno": db.func.now()})
+                    
+                    db.session.commit()
                 
             resposta.append(dicionario)
 

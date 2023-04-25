@@ -63,8 +63,6 @@ class RotasEnderecos(Resource):
             if db.session.query(Endereco).filter_by(id=id).update(att_endereco) == 0:
                 db.session.commit()
                 return att_endereco, 404
-            
-            print("======== 68 =========")
 
             db.session.commit()
             return att_endereco, 200
