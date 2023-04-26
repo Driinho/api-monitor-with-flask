@@ -6,6 +6,8 @@ from src.models.Enderecos import endereco
 from src.models.Enderecos import endereco_post
 from src.server.instance import server
 from src.models.models import db, Endereco
+from src.controllers.enderecos_controller import EnderecoController
+
 
 app, api = server.app, server.api
 
@@ -14,7 +16,7 @@ class RotasEnderecos(Resource):
     # método GET para listar todos os endereços
     @api.marshal_list_with(endereco)
     def get(self):
-        todos_enderecos = Endereco.query.all()
+        todos_enderecos = EnderecoController.get_all()
         return todos_enderecos, 200
     
     # método POST para criar um novo endereço
@@ -22,17 +24,9 @@ class RotasEnderecos(Resource):
     @api.marshal_list_with(endereco)
     def post(self):
         post = request.get_json()
+        endereco_criado = EnderecoController.create_endereco(post)
 
-        new_endereco = Endereco(
-            nome_do_sistema=post.get('nome_do_sistema'), 
-            endereco=post.get('endereco'), 
-            ping=post.get('ping')
-        )
-
-        db.session.add(new_endereco)
-        db.session.commit()
-
-        return new_endereco, 201
+        return endereco_criado, 201
 
     @api.doc(params={'id': 'ID do Endereço'})
     @api.route('/api/enderecos/<int:id>')
@@ -40,12 +34,12 @@ class RotasEnderecos(Resource):
         # método GET para listar um endereço específico
         @api.marshal_with(endereco)
         def get(self, id):
-            endereco_por_id = Endereco.query.filter_by(id=id).first()
+            endereco = EnderecoController.get_by_id(id)
 
-            if endereco_por_id is None:
-                return endereco_por_id, 404
+            if endereco is None:
+                return endereco, 404
             else:
-                return endereco_por_id, 200
+                return endereco, 200
                 
         # método PUT para editar um endereço específico
         @api.expect(endereco_post, validate=True)
@@ -53,27 +47,20 @@ class RotasEnderecos(Resource):
         def put(self, id):
             post = request.get_json()
 
-            att_endereco = {
-                "id": id,
-                "nome_do_sistema": post.get('nome_do_sistema'),
-                "endereco": post.get('endereco'),
-                "ping": post.get('ping')
-            }
+            att_endereco = EnderecoController.att_endereco(id, post)
             
-            if db.session.query(Endereco).filter_by(id=id).update(att_endereco) == 0:
-                db.session.commit()
+            if att_endereco == 0:
                 return att_endereco, 404
 
-            db.session.commit()
             return att_endereco, 200
 
         # método DELETE para deletar um endereço específico
         @api.marshal_list_with(endereco)
         def delete(self, id):
-            del_endereco = Endereco.query.filter_by(id=id).first()
+            del_endereco = EnderecoController.del_endereco(id)
 
-            db.session.query(Endereco).filter_by(id=id).update({"status": False})
-            db.session.commit()
-
-            return del_endereco, 204
+            if not del_endereco:
+                return del_endereco, 404
+                
+            return del_endereco, 200
 
