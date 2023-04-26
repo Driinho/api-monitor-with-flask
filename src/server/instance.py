@@ -9,7 +9,7 @@ class Server():
         self.app = Flask(__name__)
         self.app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite'
         db.init_app(self.app)
-        migrate = Migrate(self.app, db)
+        migrate = Migrate(self.app, db, render_as_batch=True)
         self.api = Api(self.app,
             title='Api Monitor',
             version='1.0',

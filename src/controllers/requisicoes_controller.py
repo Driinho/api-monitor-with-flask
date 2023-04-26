@@ -50,21 +50,18 @@ class RequisicoesController:
                     }
 
             if dicionario.get('status_code') == 'ERRO':
-                if not db.session.query(Incidente).filter(
-                    Incidente.endereco == dicionario.get('endereco'), 
-                    Incidente.data_hora_retorno.is_(None)
-                    ).all():
+                if not Incidente.query.filter(Incidente.endereco.has(id=endereco.id), Incidente.data_hora_retorno.is_(None)).first():
                     incidente = Incidente(
-                        endereco=dicionario.get('endereco'),
+                        endereco=endereco,
                         data_hora_queda=db.func.now()
                     )
 
                     db.session.add(incidente)
                     db.session.commit()
             else:
-                if db.session.query(Incidente).filter(Incidente.endereco == dicionario.get('endereco'), Incidente.data_hora_retorno.is_(None)).first():
+                if Incidente.query.filter(Incidente.endereco.has(id=endereco.id), Incidente.data_hora_retorno.is_(None)).first():
                     
-                    db.session.query(Incidente).filter(Incidente.endereco == dicionario.get('endereco'), Incidente.data_hora_retorno.is_(None)).update({"data_hora_retorno": db.func.now()})
+                    db.session.query(Incidente).filter(Incidente.endereco.has(id=endereco.id), Incidente.data_hora_retorno.is_(None)).update({"data_hora_retorno": db.func.now()})
                     
                     db.session.commit()
                 
