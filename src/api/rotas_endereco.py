@@ -1,4 +1,4 @@
-from flask import request, make_response, jsonify
+from flask import request
 from flask_restx import Resource
 from .db import Enderecos
 
@@ -11,7 +11,7 @@ from src.controllers.enderecos_controller import EnderecoController
 
 app, api = server.app, server.api
 
-@api.route('/api/enderecos')
+@api.route('/api/v1/enderecos')
 class RotasEnderecos(Resource):
     # método GET para listar todos os endereços
     @api.marshal_list_with(endereco)
@@ -29,7 +29,7 @@ class RotasEnderecos(Resource):
         return endereco_criado, 201
 
     @api.doc(params={'id': 'ID do Endereço'})
-    @api.route('/api/enderecos/<int:id>')
+    @api.route('/api/v1/enderecos/<int:id>')
     class endereco_by_id(Resource):
         # método GET para listar um endereço específico
         @api.marshal_with(endereco)

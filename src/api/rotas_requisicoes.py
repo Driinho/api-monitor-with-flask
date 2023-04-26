@@ -6,7 +6,7 @@ from src.controllers.requisicoes_controller import RequisicoesController
 
 app, api = server.app, server.api
 
-@api.route('/api/status')
+@api.route('/api/v1/status')
 class RotasRequests(Resource):
     @api.marshal_with(resposta)
     def get(self):
