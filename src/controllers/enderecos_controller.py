@@ -3,10 +3,10 @@ from src.models.models import db, Endereco
 class EnderecoController:
     
     def get_all():
-        return Endereco.query.all()
+        return Endereco.query.filter_by(status=True).all()
     
     def get_by_id(id):
-        return Endereco.query.filter_by(id=id).first()
+        return Endereco.query.filter_by(id=id, status=True).first()
     
     def create_endereco(json):
         endereco = Endereco(
