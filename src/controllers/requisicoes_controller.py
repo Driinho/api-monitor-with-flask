@@ -5,7 +5,7 @@ import platform, subprocess
 
 class RequisicoesController:
     def get_all():
-        lista = Endereco.query.all()
+        lista = Endereco.query.filter_by(status=True).all()
 
         resposta = []
 
@@ -17,7 +17,7 @@ class RequisicoesController:
                     dicionario = {
                         "nome_do_sistema": endereco.nome_do_sistema,
                         "endereco": endereco.endereco,
-                        "tempo_de_resposta": f"{response.elapsed.total_seconds()} segundos",
+                        "tempo_de_resposta": f"{response.elapsed.total_seconds()} seg",
                         "status_code": response.status_code
                     }
                 except:
