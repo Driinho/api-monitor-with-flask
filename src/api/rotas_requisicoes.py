@@ -11,3 +11,9 @@ class RotasRequests(Resource):
     @api.marshal_with(resposta)
     def get(self):
         return RequisicoesController.get_all(), 200
+
+    @api.route('/api/v1/status/<int:id>')
+    class RotasRequestsUmEndereco(Resource):
+        @api.marshal_with(resposta)
+        def get(self, id):
+            return RequisicoesController.get_one(id), 200

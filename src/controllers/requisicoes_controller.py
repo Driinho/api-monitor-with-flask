@@ -68,3 +68,24 @@ class RequisicoesController:
             resposta.append(dicionario)
         
         return resposta
+
+    def get_one(id):
+        try:
+            endereco = Endereco.query.filter_by(id=id, status=True).first()
+
+            response = http.get(endereco.endereco)
+            
+            dicionario = {
+                "nome_do_sistema": endereco.nome_do_sistema,
+                "endereco": endereco.endereco,
+                "tempo_de_resposta": f"{response.elapsed.total_seconds()} seg",
+                "status_code": response.status_code
+            }
+        except:
+            dicionario = {
+                "nome_do_sistema": endereco.nome_do_sistema,
+                "endereco": endereco.endereco,
+                "status_code": 'ERRO'
+            }
+        
+        return dicionario
